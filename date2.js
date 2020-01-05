@@ -136,6 +136,7 @@ var sdokCalendar = {}
 //-Check events and add buffer time to a calendar day 
  sdokCalendar.timelist = function (opt){
 var calendarDay = opt.calendarDay
+console.log(opt)
   let temp = {
     events: opt.events.filter(x=>dateFns.isSameDay(x[0],calendarDay)),
     generatedTimes:[],
