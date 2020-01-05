@@ -1,5 +1,5 @@
 //delete
-//var dateFns = require('date-fns')
+var dateFns = require('date-fns')
 let deleteTimeSettings = [
     [
       'Sun Jan 26 2020 02:30:00 GMT+0200 (Eastern European Standard Time)',
@@ -129,54 +129,62 @@ var optStep = {
 //Settings
 
 var sdokCalendar = {}
-//-Check events and add buffer time to a calendar day 
- sdokCalendar.timelist = function (calendarDay,events,maxEventNumver,bufferTime,timeSettings,customTimeSettings,interval){
 
+//sdokCalendar.result = sdokCalendar.timelist(optStep.currentDate,optStep.events,optStep.maxEventNumver,optStep.buffer,optStep.timeSettings,optStep.customTimeSettings,optStep.interval)
+
+
+//-Check events and add buffer time to a calendar day 
+ sdokCalendar.timelist = function (opt){
+var calendarDay = opt.calendarDay
   let temp = {
-    events: events.filter(x=>dateFns.isSameDay(x[0],calendarDay)),
+    events: opt.events.filter(x=>dateFns.isSameDay(x[0],calendarDay)),
     generatedTimes:[],
     isAvailable:false,
     timeSettings:[],
-    customTimeSettings:[],    
+    customTimeSettings:[],
   }
-  if (temp.events.length<maxEventNumver){temp.isAvailable = true}
+  if (temp.events.length<opt.maxEventNumber){temp.isAvailable = true}
 
 //Is Available
 if (temp.isAvailable == true){
 
 
-temp.customTimeSettings = customTimeSettings.filter(x=>dateFns.isSameDay(x[0],calendarDay))
-temp.generatedTimes = sdokCalendar.generateMinutes(dateFns.startOfDay(calendarDay),interval)
+temp.customTimeSettings = opt.customTimeSettings.filter(x=>dateFns.isSameDay(x[0],calendarDay))
+temp.generatedTimes = sdokCalendar.generateMinutes(dateFns.startOfDay(calendarDay),opt.interval)
 // add bufferTime
-if (bufferTime>0 && temp.isAvailable==true){temp.events = temp.events.map(x=>sdokCalendar.addBuffer(x,bufferTime)) }  
+if (opt.bufferTime>0 && temp.isAvailable==true){temp.events = temp.events.map(x=>sdokCalendar.addBuffer(x,opt.bufferTime)) }  
 // add bufferTime
   //CustomTime or WeekDayTime
 if (temp.customTimeSettings.length>0){
-  temp.timeSettings = customTimeSettings
+  temp.timeSettings = opt.customTimeSettings
 } else {
-  temp.timeSettings = timeSettings.filter(x=>{let filter = calendarDay.getDay()==x[0].getDay(); return filter}).map(x=>{let start = sdokCalendar.setDateToCurrentDate(x[0],calendarDay);let end = sdokCalendar.setDateToCurrentDate(x[1],calendarDay); return [start,end]})
+  temp.timeSettings = opt.timeSettings.filter(x=>{let filter = calendarDay.getDay()==x[0].getDay(); return filter}).map(x=>{let start = sdokCalendar.setDateToCurrentDate(x[0],calendarDay);let end = sdokCalendar.setDateToCurrentDate(x[1],calendarDay); return [start,end]})
 }
 //CustomTime or WeekDayTime
 //OverLap
-console.log(temp.timeSettings)
 temp.overlap = sdokCalendar.overlapsList(temp.generatedTimes,temp.timeSettings).overlapTimes
-console.log(temp.overlap)
 temp.overlap= sdokCalendar.overlapsList(temp.overlap,temp.events).noOverlapTimes
    
 //Overlap
 
-console.log(temp)
 
 
 let result = {
   events:temp.events,
-  timeSettings:[],
-  isAvailable:false
+  timeSettings:temp.timeSettings,
+  isAvailable:temp.isAvailable,
+  customTimeSettings:temp.customTimeSettings,
+  timeList:temp.overlap,
+  bufferTime:opt.bufferTime,
+  interval:opt.interval,
+  calendarDay:opt.calendarDay
 }
-return temp
+return result
 }//
 
 }
+
+
 
 //---helper = add Buffer Time
 sdokCalendar.addBuffer = function (event,bufferTime){    
@@ -289,6 +297,14 @@ sdokCalendar.generateMinutes = function  (date,interval){
  return result
  }
 
-//delete
-sdokCalendar.result = sdokCalendar.timelist(optStep.currentDate,optStep.events,optStep.maxEventNumver,optStep.buffer,optStep.timeSettings,optStep.customTimeSettings,optStep.interval)
-//delete
+
+sdokCalendar.options = {
+  calendarDay:optStep.currentDate,
+  events:optStep.events,
+  maxEventNumber:optStep.maxEventNumver,
+  bufferTime:15,
+  timeSettings:optStep.timeSettings,
+  customTimeSettings:optStep.customTimeSettings,
+  interval:30
+}
+
