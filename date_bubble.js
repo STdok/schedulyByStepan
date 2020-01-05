@@ -1,22 +1,22 @@
 //Delete
 var dateFns = require('date-fns')
-
 function paseDates(dateList){
-    console.log(dateList)
+  console.log(dateList)
 let start = dateFns.parse(dateList[0])
 let end = dateFns.parse(dateList[1])
 let result = [start,end]
 console.log(result)
 
-return [start,end]
+return result
 }
 
 
-let testEvents = [["Nov 19, 2019 8:00 am","Nov 19, 2019 8:30 am"], ["Nov 20, 2019 9:00 am","Nov 20, 2019 9:30 am"], ["Dec 6, 2019 10:30 am","Dec 6, 2019 11:00 am"], ["Nov 19, 2019 7:00 pm","Nov 19, 2019 7:30 pm"], ["Nov 20, 2019 4:00 am","Nov 20, 2019 4:30 am"], ["Nov 20, 2019 4:30 am","Nov 20, 2019 5:00 am"], ["Nov 20, 2019 5:00 am","Nov 20, 2019 5:30 am"], ["Nov 19, 2019 7:30 pm","Nov 19, 2019 8:00 pm"], ["Nov 19, 2019 9:00 pm","Nov 19, 2019 9:30 pm"], ["Nov 25, 2019 2:00 am","Nov 25, 2019 2:30 am"], ["Nov 26, 2019 2:00 am","Nov 26, 2019 2:30 am"], ["Dec 5, 2019 5:00 am","Dec 5, 2019 5:30 am"], ["Nov 28, 2019 5:00 am","Nov 28, 2019 5:30 am"], ["Jan 10, 2020 1:30 pm","Jan 10, 2020 2:00 pm"], ["Jan 1, 2020 4:00 am","Jan 1, 2020 4:30 am"], ["Dec 3, 2019 2:00 am","Dec 3, 2019 2:30 am"], ["Dec 2, 2019 2:00 am","Dec 2, 2019 2:30 am"], ["Dec 5, 2019 5:30 am","Dec 5, 2019 6:00 am"], ["Dec 6, 2019 1:00 pm","Dec 6, 2019 1:30 pm"], ["Dec 4, 2019 5:30 am","Dec 4, 2019 6:00 am"], ["Dec 2, 2019 4:00 am","Dec 2, 2019 4:30 am"], ["Jan 2, 2020 5:00 am","Jan 2, 2020 5:30 am"], ["Jan 5, 2020 12:00 am","Jan 5, 2020 12:00 am"], ["Jan 5, 2020 4:30 pm","Jan 5, 2020 5:00 pm"], ["Jan 5, 2020 11:00 am","Jan 5, 2020 12:00 pm"], ["Jan 5, 2020 3:00 am","Jan 5, 2020 5:00 am"], ["Jan 5, 2020 3:00 am","Jan 5, 2020 5:00 am"], ["Jan 5, 2020 3:00 am","Jan 5, 2020 5:00 am"]]
-let testTimeSettings = [["Nov 18, 2019 2:00 am","Nov 18, 2019 5:00 am"], ["Nov 20, 2019 4:00 am","Nov 20, 2019 6:00 am"], ["Nov 21, 2019 5:00 am","Nov 21, 2019 9:00 am"], ["Nov 19, 2019 2:00 am","Nov 19, 2019 7:00 am"], ["Nov 18, 2019 9:00 am","Nov 18, 2019 11:00 am"], ["Nov 22, 2019 1:00 pm","Nov 22, 2019 3:00 pm"], ["Nov 19, 2019 7:00 pm","Nov 19, 2019 10:00 pm"], ["Nov 23, 2019 8:45 am","Nov 23, 2019 1:00 pm"], ["Nov 24, 2019 3:15 am","Nov 24, 2019 7:45 am"]]
+let testEvents = [["Jan 5, 2020 4:30 am","Jan 5, 2020 6:30 am"]]
+let testTimeSettings = [["Nov 18, 2019 2:00 am","Nov 18, 2019 5:00 am"], ["Nov 20, 2019 4:00 am","Nov 20, 2019 6:00 am"], ["Nov 21, 2019 5:00 am","Nov 21, 2019 9:00 am"], ["Nov 19, 2019 2:00 am","Nov 19, 2019 7:00 am"], ["Nov 18, 2019 9:00 am","Nov 18, 2019 11:00 am"], ["Nov 22, 2019 1:00 pm","Nov 22, 2019 3:00 pm"], ["Nov 19, 2019 7:00 pm","Nov 19, 2019 10:00 pm"], ["Nov 23, 2019 8:45 am","Nov 23, 2019 1:00 pm"], ["Nov 24, 2019 3:15 am","Nov 24, 2019 7:45 am"], ["Nov 24, 2019 10:00 pm","Nov 24, 2019 11:00 pm"]]
 
 let testEventsMap = testEvents.map(element => {paseDates(element); return element})
-let testSettingsMap = testTimeSettings.map(element => {paseDates(element); return element})
+let testSettingsMap = testTimeSettings.map(element => {let date = paseDates(element); return date})
+console.log(testSettingsMap)
 
 
 let properties = {
@@ -28,23 +28,27 @@ let properties = {
     maxeventnumber: 5,
     calendarday: new Date()
 }
-console.log(properties.events)
-
+//console.log(properties.events)
+let instance = {}
 //delete
     
+
+
+// Publish To Bubble
     var sdokCalendar = {}
-  
-  //-Check events and add buffer time to a calendar day 
-   sdokCalendar.timelist = function (opt){
+  //-Check events and add buffer time to a calendar day  
+ sdokCalendar.timelist = function (opt){
   var calendarDay = opt.calendarDay
   console.log('options = ',opt)
     let temp = {
-      events: opt.events.filter(x=>dateFns.isSameDay(x[0],calendarDay)),
+      events: opt.events.filter(x=>dateFns.isSameDay(x[0],calendarDay)), 
       generatedTimes:[],
       isAvailable:false,
-      timeSettings:[],
+      timeSettings:opt.timeSettings,
       customTimeSettings:[],
+      overlap:[]
     }
+    console.log(opt.events)
     if (temp.events.length<opt.maxEventNumber){temp.isAvailable = true}
   
        console.log('IsAvailable_1 = ',temp.isAvailable)
@@ -74,7 +78,8 @@ console.log(properties.events)
   } else {
       
     //Start WeekDayTimeSettings
-      temp.timeSettings = opt.timeSettings.filter(x=>{
+    temp.timeSettings = opt.timeSettings.filter(x=>{
+        console.log(x[0].getDay());
           let filter = calendarDay.getDay()==x[0].getDay(); 
           console.log(' WeekdayTimeSettingsFilter = ',filter);
       console.log(' CalendarDay',calendarDay)
@@ -100,8 +105,8 @@ console.log(properties.events)
       console.log(' temp.overlap_1 = ', temp.overlap)
       // check Generated Times with events Start
   //temp.overlap= sdokCalendar.overlapsList(temp.overlap,temp.events).noOverlapTimes
-  
-          temp.overlap= temp.overlap.filter(x=>{let result = sdokCalendar.overlapsSingle(x,temp.events); if (result==false){return true}})
+  console.log(temp.events)
+  temp.overlap= temp.overlap.filter(x=>{let result = sdokCalendar.overlapsSingle(x,temp.events);console.log(result); if (result==false){return true}})
              console.log(' temp.overlap_2 = ', temp.overlap)
      
           // check Generated Times with events Start
@@ -123,6 +128,19 @@ console.log(properties.events)
   console.log('result = ',result)
   
   return result
+  } else {
+    let result = {
+        events:temp.events,
+        timeSettings:temp.timeSettings,
+        isAvailable:temp.isAvailable,
+        customTimeSettings:temp.customTimeSettings,
+        timeList:temp.overlap,
+        bufferTime:opt.bufferTime,
+        interval:opt.interval,
+        calendarDay:opt.calendarDay
+      }
+console.log('result = ',result)
+return result
   }//
   
   }
@@ -161,17 +179,22 @@ console.log(properties.events)
   
   //Single Time Overlap
     sdokCalendar.overlapsSingle = function (time,overlapList){
+   
       var over = false       
-      var startA = time[0]
-      var endA = time[1]
+      var startA = time[0]; console.log(startA)
+      var endA = time[1]; console.log(startA,endA)
                 for (j=0;j<overlapList.length;j++){
-                var startB = overlapList[j][0]
-                var endB = overlapList[j][1]
+                    console.log(overlapList[j])
+                var startB = overlapList[j][0];  console.log(startB)
+
+                var endB = overlapList[j][1];console.log(endB)
                over =  dateFns.areRangesOverlapping(startA,endA,startB,endB) 
-                  if (over=true){break}
+               console.log(over)
+                  if (over==true){break}
                  }//for j 
       
-     let result = false
+     let result = over 
+     console.log(result)
       return result
      }
   //single Time Overlap  
@@ -236,24 +259,12 @@ console.log(properties.events)
    return result
    }
   
-  /*
-  sdokCalendar.options = {
-    calendarDay:optStep.currentDate,
-    events:optStep.events,
-    maxEventNumber:optStep.maxEventNumver,
-    bufferTime:15,
-    timeSettings:optStep.timeSettings,
-    customTimeSettings:optStep.customTimeSettings,
-    interval:30
-  }
-  */
-    
       
-      
-      
-      
-   let customTimeSettings = []   
-      
+ let customTimeSettings = []   
+ if (properties.customtimesettings != null){
+     customTimeSettings = properties.customtimesettings
+ } 
+ console.log(customTimeSettings)
   var options = {
     calendarDay:properties.calendarday,
     events: properties.events,//.get(0,99),
@@ -265,11 +276,14 @@ console.log(properties.events)
   }
   
       
-  //instance.publishState('timelist',sdokCalendar.timelist(options).timeList)
-  //instance.publishState('timelist',properties.events.get(0,99))
+instance.publishState('timelist',sdokCalendar.timelist(options).timeList)
       
-      //delete 
-var result = sdokCalendar.timeList(options)
-console.log(result)
+// Publish To Bubble
+
+
+//delete 
+
+let mine = sdokCalendar.timelist(options)
+console.log(mine)
       //delete
   
