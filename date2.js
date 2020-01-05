@@ -1,5 +1,5 @@
-var dateFns = require('date-fns')
-
+//delete
+//var dateFns = require('date-fns')
 let deleteTimeSettings = [
     [
       'Sun Jan 26 2020 02:30:00 GMT+0200 (Eastern European Standard Time)',
@@ -98,14 +98,15 @@ let deleteTimeSettings = [
       'Fri Jan 31 2020 07:00:00 GMT+0200 (Eastern European Standard Time)'
     ]
   ]
-
 let delTimeSettings = deleteTimeSettings.map(x=>{
 let start = dateFns.parse(x[0])
 let end = dateFns.parse(x[1])
 return [start,end]
 
 })
+//delete
 
+//Settings
 
 var optStep = {
     calendarDays:[new Date(2020,1,26),new Date(2020,1,27),new Date(2020,1,28)],
@@ -125,11 +126,9 @@ var optStep = {
     buffer:15,
     maxEventNumver: 4
 }
-
+//Settings
 
 var sdokCalendar = {}
-
-
 //-Check events and add buffer time to a calendar day 
  sdokCalendar.timelist = function (calendarDay,events,maxEventNumver,bufferTime,timeSettings,customTimeSettings,interval){
 
@@ -290,5 +289,6 @@ sdokCalendar.generateMinutes = function  (date,interval){
  return result
  }
 
-
- let test1 = sdokCalendar.timelist(optStep.currentDate,optStep.events,optStep.maxEventNumver,optStep.buffer,optStep.timeSettings,optStep.customTimeSettings,optStep.interval)
+//delete
+sdokCalendar.result = sdokCalendar.timelist(optStep.currentDate,optStep.events,optStep.maxEventNumver,optStep.buffer,optStep.timeSettings,optStep.customTimeSettings,optStep.interval)
+//delete
