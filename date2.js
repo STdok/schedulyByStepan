@@ -1,4 +1,5 @@
-//delete
+//delete  
+
 //var dateFns = require('date-fns')
 
 
@@ -169,7 +170,7 @@ sdokCalendar.generateMinutes = function  (date,interval){
  return result
  }
 
-
+/*
 sdokCalendar.options = {
   calendarDay:optStep.currentDate,
   events:optStep.events,
@@ -179,4 +180,4 @@ sdokCalendar.options = {
   customTimeSettings:optStep.customTimeSettings,
   interval:30
 }
-
+*/
