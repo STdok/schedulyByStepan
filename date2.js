@@ -1,5 +1,5 @@
 //delete
-var dateFns = require('date-fns')
+//var dateFns = require('date-fns')
 let deleteTimeSettings = [
     [
       'Sun Jan 26 2020 02:30:00 GMT+0200 (Eastern European Standard Time)',
